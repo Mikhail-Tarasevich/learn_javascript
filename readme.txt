@@ -1,0 +1,1 @@
+задания с сайта https://learn.javascript.ru/
