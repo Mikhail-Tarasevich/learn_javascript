@@ -1,12 +1,12 @@
+let counter_en = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
+let counter_lt = ["nulla", "unum", "duo", "tria", "quattuor", "quinque", "sex", "septem", "octo", "novem"];
+
 let counter = {
     number: "zero",
     index: 0,
 };
 
 counter[Symbol.iterator] = function() {
-    let counter_en = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
-    let counter_lt = ["nulla", "unum", "duo", "tria", "quattuor", "quinque", "sex", "septem", "octo", "novem"];
-    
     return {
       ind: this.index,
       num: this.number,
@@ -31,5 +31,17 @@ counter[Symbol.iterator] = function() {
   for (let c of counter) {
     console.log(c);
   }
+  console.log("-------------- Array.from ");
+  let arr = Array.from(counter);
+  for (let i=0; i<arr.length; i++) {
+    console.log(i + " - " + arr[i]);
+  }
+  console.log("-------------- Array.from(function()) ");
+  arr = Array.from(counter, num=>counter_lt[counter_en.indexOf(num)]);
+  for (let i=0; i<arr.length; i++) {
+    console.log(i + " - " + arr[i]);
+  }
 
+  
+  
 
