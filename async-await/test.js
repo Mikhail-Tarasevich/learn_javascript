@@ -1,18 +1,43 @@
-function loadJson_old(url) {
-  return fetch(url)
-    .then(response => {
-      if (response.status == 200) {
-        return response.json();
-      } else {
-        throw new Error(response.status);
-      }
-    })
+class HttpError extends Error {
+  constructor(response) {
+    super(`${response.status} for ${response.url}`);
+    this.name = 'HttpError';
+    this.response = response;
+  }
 }
 
 async function loadJson(url) {
-  return await (await fetch(url)).json()
+  let response = await fetch(url);
+
+  if (response.status == 200) {
+    return response.json();
+  } else {
+    throw new HttpError(response);
+  }
 }
 
-let res2 = loadJson(`https://api.github.com/users/mike`)
-  .catch(alert); 
-res2.then(result=>console.log(result));
+// Запрашивать логин, пока github не вернёт существующего пользователя.
+function demoGithubUser() {
+  let name = prompt("Введите логин?", "iliakan");
+
+  if (name==null) {
+    return 0;
+  }
+  else {
+    return loadJson(`https://api.github.com/users/${name}`)
+    .then(user => {
+      alert(`Полное имя: ${user.name}.`);
+      return user;
+    })
+    .catch(err => {
+      if (err instanceof HttpError && err.response.status == 404) {
+        alert("Такого пользователя не существует, пожалуйста, повторите ввод.");
+        return demoGithubUser();
+      } else {
+        throw err;
+      }
+    });
+  }
+}
+
+demoGithubUser();
