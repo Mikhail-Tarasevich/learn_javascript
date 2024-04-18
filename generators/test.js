@@ -1,14 +1,22 @@
-function* pseudoRandom(previous) {
-  let value = previous;
+const str = 'The quick brown fox jumps over the lazy dog';
 
-  while(true) {
-    value = value * 16807 % 2147483647
-    yield value;
+const words = str.split(' ');
+
+async function* pseudoRandom() {
+  for (w of words) {
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    yield w
   }
 }
 
-let generator = pseudoRandom(1);
+(async () => {
 
-console.log(generator.next().value);
-console.log(generator.next().value);
-console.log(generator.next().value);
+  let pp = pseudoRandom();
+      for await (let p of pp) {
+        console.log(p);
+      }
+
+})();
+
+
+
